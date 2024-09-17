@@ -4,19 +4,21 @@ import { config } from 'dotenv';
 import userRouter from './routes/userAuth.route.js';
 import bodyParser from 'body-parser';
 import cors from 'cors'
+import cookieParser from 'cookie-parser';
 config();
 
 const app = express();
+
+app.use(express.json());
 app.use(cors({
-    origin:["https://localhost:5173"],
+    origin:["http://localhost:3000"],
     methods:["POST","GET"],
     credentials:true
 }))
 app.use(bodyParser.json());
-
+app.use(cookieParser());
 const PORT = process.env.PORT_NUM;
 
-app.use(express.json());
 
 app.use('/api', userRouter);
 

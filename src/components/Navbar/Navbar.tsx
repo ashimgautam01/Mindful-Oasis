@@ -1,9 +1,19 @@
-
+"use client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { LeafIcon, MenuIcon } from "lucide-react"
 
+import Cookie from 'js-cookie'
+import axios from "axios"
+
 export default function Component() {
+  
+  const token=Cookie.get('accesst')
+  const handleClick=async()=>{
+    const response =await axios.post("localhost:8080/api/v1/logout")
+    Cookie.remove('accesst')
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full bg-black/100 backdrop-blur transition-all duration-300">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
@@ -37,11 +47,11 @@ export default function Component() {
             <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:translate-x-0" />
           </Link>
           <Link
-            href="#"
+            href="/community"
             className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
             prefetch={false}
           >
-            <span className="relative z-10 hover:font-extrabold text-white">Resources</span>
+            <span className="relative z-10 hover:font-extrabold text-white">Community</span>
             <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:translate-x-0" />
           </Link>
           <Link
@@ -52,6 +62,37 @@ export default function Component() {
             <span className="relative z-10 hover:font-extrabold text-white">Contact</span>
             <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:translate-x-0" />
           </Link>
+          {!token ?
+          <>
+          <Link
+            href="/sign-in"
+            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
+            prefetch={false}
+          >
+            <span className="relative z-10 font-serif hover:font-extrabold text-white">Log-In</span>
+            <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
+          </Link>
+          <Link
+            href="/sign-up"
+            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
+            prefetch={false}
+          >
+            <span className="relative z-10 font-serif hover:font-extrabold text-white">Sign-In</span>
+            <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
+          </Link>
+          </>:
+          <>
+          <Link
+            href={'/'}
+            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
+            
+            onClick={handleClick}
+          >
+            <span className="relative z-10 font-serif hover:font-extrabold text-white">Log Out</span>
+            <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
+          </Link>
+          </>
+          }
         </nav>
         <Link
           href="#"

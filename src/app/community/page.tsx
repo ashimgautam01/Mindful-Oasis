@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { ChangeEventHandler, EventHandler, FormEvent, useState } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,50 +8,41 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { FileImageIcon, MessageCircleIcon, ShareIcon } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
-
+import axios from 'axios';
+import Cookies from 'js-cookie';
 const Page: React.FC = () => {
-  const [comment, setComment] = useState('');
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      user: 'Anonymous',
-      time: '2 hours ago',
-      text: 'Had a great time at the park with my friends today! The weather was perfect.',
-      image: 'https://img.freepik.com/free-vector/vertical-poster-template-world-mental-health-day-celebration_23-2149669076.jpg?t=st=1726557299~exp=1726560899~hmac=3ff37cf99e6815e033895d06e3e101e9807da7c3b3c443323b2cb941645caa34&w=740',
-      comments: [
-        { user: 'Anonymous', text: 'Great post! Really enjoyed it.' },
-        { user: 'Anonymous', text: 'Thanks for sharing this.' },
-        { user: 'Anonymous', text: 'Nice photo! Where was this taken?' },
-        { user: 'Anonymous', text: 'I agree, the weather looks amazing!' },
-      ],
-    },
-    {
-      id: 2,
-      user: 'Anonymous',
-      time: '1 day ago',
-      text: 'Excited to start my new job next week! Can\'t wait to see what the future holds.',
-      comments: [
-        { user: 'Anonymous', text: 'Congratulations! Best of luck in your new job.' },
-        { user: 'Anonymous', text: 'Wishing you all the best in your new role!' },
-      ],
-    },
-  ]);
-
-  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setComment(e.target.value);
-  };
-
-  const handleCommentSubmit = (postId: number) => {
-    if (comment.trim()) {
-      setPosts(posts.map(post =>
-        post.id === postId
-          ? { ...post, comments: [{ user: 'Anonymous', text: comment }, ...post.comments] }
-          : post
-      ));
-      setComment(''); // Clear the textarea after submission
+    interface Post{
+      image?:string,
+      text:string
     }
-  };
-
+   
+    const user_id=Cookies.get('id')
+    console.log(user_id);
+    const [posts,Setpost]=useState<Post>({
+      image:"",
+      text:""
+    });
+    const handleSubmitPost=async(e:React.FormEvent)=>{
+      e.preventDefault()
+      try {
+        const response=await axios.post("localhost:8080/api/v2/addpost",{
+          user_id,
+          posts
+        });
+        if(response.status==200){
+          console.log("Post added");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    const handleChangepostText=(e: React.ChangeEvent<HTMLInputElement>)=>{
+        const {name,value}=e.target;
+        Setpost((prevData)=>({
+          ...prevData,
+          [name]:value,
+        }))
+    }
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">
       <Navbar />
@@ -79,7 +70,38 @@ const Page: React.FC = () => {
               <img src="https://img.freepik.com/free-vector/mental-health-instagram-posts-collection_23-2149054460.jpg?t=st=1726557462~exp=1726561062~hmac=d325b200de22975ba9595914e6bd2530ec31a569118745940106fbe4100f0e3c&w=740" alt="Profile Image" className="mt-4 rounded-lg w-96 h-96 object-cover" />
         </div>
         <div>
-          {posts.map(post => {
+        <div className="bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+  <form onSubmit={handleSubmitPost} className="space-y-4">
+    <div className="relative">
+      <Input
+        placeholder="What's on your mind?"
+        type='text'
+        value={posts.text}
+        onChange={handleChangepostText}
+        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+      />
+      <p className="absolute top-0 left-0 p-2 text-gray-400 text-sm"></p>
+    </div>
+    
+    <input
+      type="file"
+      accept="image/*"
+      onChange={handleChangepostText}
+      className="w-full border border-gray-300 p-2 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+    />
+    
+    <div className="flex justify-end">
+      <Button
+        type="submit"
+        className="bg-teal-500 text-white hover:bg-teal-600 transition-colors duration-300 py-2 px-4 rounded-md"
+      >
+        Post
+      </Button>
+    </div>
+  </form>
+</div>
+
+          {/* {posts.map(post => {
             const [showAllComments, setShowAllComments] = useState(false);
 
             return (
@@ -147,7 +169,7 @@ const Page: React.FC = () => {
                 </div>
               </div>
             );
-          })}
+          })} */}
         </div>
       </main>
     </div>

@@ -27,7 +27,7 @@ const Page: React.FC = () => {
         { withCredentials: true } 
       );
       console.log(response.data);
-     
+          Cookie.set('id',response.data.id)
           Cookie.set('accesst', response.data.access_token);
      
       // router.replace('/');

@@ -5,13 +5,15 @@ import userRouter from './routes/userAuth.route.js';
 import bodyParser from 'body-parser';
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
+import postRoute from './routes/post.route.js'
+import CommentRoute from './routes/comment.route.js'
 config();
 
 const app = express();
 
 app.use(express.json());
 app.use(cors({
-    origin:["http://localhost:3000"],
+    origin:["https://localhost:3000"],
     methods:["POST","GET"],
     credentials:true
 }))
@@ -21,6 +23,8 @@ const PORT = process.env.PORT_NUM;
 
 
 app.use('/api', userRouter);
+app.use('/api',postRoute);
+app.use('/api',CommentRoute)
 
 const pool = mysql.createPool({
    host: process.env.DATABASE_HOST,

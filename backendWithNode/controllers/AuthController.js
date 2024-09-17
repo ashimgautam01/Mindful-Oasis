@@ -137,7 +137,7 @@ const LoginUser = async (req, res) => {
         sameSite: 'Strict',
         path: '/'
       });
-      res.status(200).json({'access_token':access_token,message:"Login Successful"});
+      res.status(200).json({'access_token':access_token,"id":user.id,message:"Login Successful"});
     
   } catch (error) {
     console.log(error);

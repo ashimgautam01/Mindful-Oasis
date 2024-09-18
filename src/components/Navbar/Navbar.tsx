@@ -55,6 +55,10 @@ export default function Component() {
             <span className="relative z-10 hover:font-extrabold text-white">Contact</span>
             <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:translate-x-0" />
           </Link>
+          <Link href="/therapists" className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10" prefetch={false}>
+            <span className="relative z-10 hover:font-extrabold text-white">Therapists</span>
+            <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:translate-x-0" />
+          </Link>
           {!isLoggedIn ? (
             <>
               <Link href="/sign-in" className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10" prefetch={false}>

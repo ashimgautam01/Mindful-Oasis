@@ -24,9 +24,10 @@ const AddComment=async(req,res)=>{
 }
 
 const getAllComment=async(req,res)=>{
-    const {post_id}=req.body
+    const {id}=req.params
+   
     try {
-        const [results]=await pool.query(`SELECT * FROM comment WHERE post_id=? ORDER BY created_at DESC `,[post_id])
+        const [results]=await pool.query(`SELECT * FROM comment WHERE post_id=? ORDER BY created_at DESC `,[id])
         return res.status(200).json({"message":"comments loaded","comments":results})
     } catch (error) {
         console.log(error);

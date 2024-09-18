@@ -3,7 +3,7 @@ import { AddComment, deleteComment, getAllComment } from '../controllers/Comment
 const router =express.Router()
 
 router.route('/v3/addcomment').post(AddComment)
-router.route('/v3/getcomment').get(getAllComment)
-router.route('/v3/deletecomment').delete(deleteComment)
+router.route('/v3/getcomment/:id').get(getAllComment)
+router.route('/v3/deletecomment/:id').delete(deleteComment)
 
 export default router

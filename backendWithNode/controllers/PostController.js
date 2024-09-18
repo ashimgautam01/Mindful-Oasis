@@ -1,8 +1,9 @@
 import pool from "../index.js";
 
 const AddPost = async (req, res) => {
-    const { user_id, image, text } = req.body;
 
+    const { user_id, image, text } = req.body;
+    
     try {
         // Query to insert a new post
         const query = `INSERT INTO post (user_id, image, text) VALUES (?, ?, ?)`;
@@ -46,7 +47,7 @@ const getAllpost = async (req,res) => {
 
     try {
      
-        const [results] = await pool.query('SELECT * FROM post ');
+        const [results] = await pool.query('SELECT * FROM post ORDER BY created_at DESC ');
         
         return res.status(200).json({results}); 
     } catch (error) {

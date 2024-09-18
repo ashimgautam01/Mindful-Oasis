@@ -1,17 +1,34 @@
-"use client"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { LeafIcon, MenuIcon } from "lucide-react"
+"use client";
 
-import Cookie from 'js-cookie'
-import axios from "axios"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { LeafIcon, MenuIcon } from "lucide-react";
+import Cookie from "js-cookie";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Loader } from "../Loader";
 
 export default function Component() {
-  
-  const token=Cookie.get('accesst')
-  const handleClick=async()=>{
-    const response =await axios.post("localhost:8080/api/v1/logout")
-    Cookie.remove('accesst')
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); 
+
+  useEffect(() => {
+    const token = Cookie.get('accesst');
+    setIsLoggedIn(!!token); 
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:8080/api/v1/logout");
+      Cookie.remove('accesst');
+      setIsLoggedIn(false);
+    } catch (error) {
+      console.error("Logout failed", error);
+    
+    }
+  };
+
+  if (isLoggedIn === null) {
+    return <div><Loader/></div>; 
   }
 
   return (
@@ -22,77 +39,43 @@ export default function Component() {
           <span className="text-lg font-semibold text-white">Mindful Oasis</span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-          <Link
-            href="/about"
-            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
-            prefetch={false}
-          >
+          <Link href="/about" className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10" prefetch={false}>
             <span className="relative z-10 font-serif hover:font-extrabold text-white">About</span>
             <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
           </Link>
-          <Link
-            href="/library"
-            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
-            prefetch={false}
-          >
-            <span className="relative z-10 font-serif hover:font-extrabold text-white">Resouces</span>
+          <Link href="/library" className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10" prefetch={false}>
+            <span className="relative z-10 font-serif hover:font-extrabold text-white">Resources</span>
             <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
           </Link>
-          <Link
-            href="#"
-            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
-            prefetch={false}
-          >
-            <span className="relative z-10 hover:font-extrabold text-white">Services</span>
-            <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:translate-x-0" />
-          </Link>
-          <Link
-            href="/community"
-            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
-            prefetch={false}
-          >
+          <Link href="/community" className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10" prefetch={false}>
             <span className="relative z-10 hover:font-extrabold text-white">Community</span>
             <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:translate-x-0" />
           </Link>
-          <Link
-            href="#"
-            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
-            prefetch={false}
-          >
+          <Link href="#" className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10" prefetch={false}>
             <span className="relative z-10 hover:font-extrabold text-white">Contact</span>
             <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:translate-x-0" />
           </Link>
-          {!token ?
-          <>
-          <Link
-            href="/sign-in"
-            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
-            prefetch={false}
-          >
-            <span className="relative z-10 font-serif hover:font-extrabold text-white">Log-In</span>
-            <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
-          </Link>
-          <Link
-            href="/sign-up"
-            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
-            prefetch={false}
-          >
-            <span className="relative z-10 font-serif hover:font-extrabold text-white">Sign-In</span>
-            <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
-          </Link>
-          </>:
-          <>
-          <Link
-            href={'/'}
-            className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
-            
-            onClick={handleClick}
-          >
-            <span className="relative z-10 font-serif hover:font-extrabold text-white">Log Out</span>
-            <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
-          </Link>
-          </>
-          }
+          {!isLoggedIn ? (
+            <>
+              <Link href="/sign-in" className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10" prefetch={false}>
+                <span className="relative z-10 font-serif hover:font-extrabold text-white">Log-In</span>
+                <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
+              </Link>
+              <Link href="/sign-up" className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10" prefetch={false}>
+                <span className="relative z-10 font-serif hover:font-extrabold text-white">Sign-Up</span>
+                <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
+              </Link>
+            </>
+          ) : (
+            <Link
+              href="#"
+              className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10"
+              onClick={handleLogout}
+            >
+              <span className="relative z-10 font-serif hover:font-extrabold text-white">Log Out</span>
+              <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:font-extrabold" />
+            </Link>
+          )}
         </nav>
         <Link
           href="#"
@@ -107,5 +90,5 @@ export default function Component() {
         </Button>
       </div>
     </header>
-  )
+  );
 }

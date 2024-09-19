@@ -4,11 +4,13 @@ import React, { useState } from 'react';
 import Therapists, { Therapist } from '@/components/helpers/Therapists'
 import 'animate.css'
 import Navbar from '@/components/Navbar/Navbar'
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 const Page = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGender, setSelectedGender] = useState('All');
   const [selectedPrice, setSelectedPrice] = useState('All');
-
+  const router=useRouter()
 
   const filteredTherapists = Therapists.filter(therapist => {
     const matchesSearch = therapist.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -96,9 +98,11 @@ const Page = () => {
                   ))}
                 </div>
                 <div className="text-gray-600">Gender: {therapist.gender}</div>
-                <button className="mt-4 px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-600 transition-colors duration-300">
+                <Link 
+                href={`/call/${therapist.id+therapist.name}`}
+                className="mt-4 px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-600 transition-colors duration-300">
                   Book Now
-                </button>
+                </Link>
               </div>
             ))}
           </div>

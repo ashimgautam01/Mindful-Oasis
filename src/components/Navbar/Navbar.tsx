@@ -51,7 +51,7 @@ export default function Component() {
             <span className="relative z-10 hover:font-extrabold text-white">Community</span>
             <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:translate-x-0" />
           </Link>
-          <Link href="#" className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10" prefetch={false}>
+          <Link href="/contact" className="group relative overflow-hidden rounded-md px-4 py-2 transition-colors hover:bg-primary/10" prefetch={false}>
             <span className="relative z-10 hover:font-extrabold text-white">Contact</span>
             <span className="absolute inset-0 -translate-x-full bg-primary transition-transform group-hover:translate-x-0" />
           </Link>
@@ -82,11 +82,11 @@ export default function Component() {
           )}
         </nav>
         <Link
-          href="#"
-          className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          href="/webinar"
+          className="inline-flex h-9 items-center justify-center rounded-md bg-transparent px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors focus:outline-none focus:ring-2 -offset-2"
           prefetch={false}
         >
-          Schedule Appointment
+          Webinars
         </Link>
         <Button variant="ghost" size="icon" className="rounded-full md:hidden">
           <MenuIcon className="h-6 w-6 text-white" />

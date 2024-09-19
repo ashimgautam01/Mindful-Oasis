@@ -4,6 +4,6 @@ const router =express.Router()
 
 router.route('/v3/addcomment').post(AddComment)
 router.route('/v3/getcomment/:id').get(getAllComment)
-router.route('/v3/deletecomment/:id').delete(deleteComment)
+router.route('/v3/deletecomment/:id').post(deleteComment)
 
 export default router

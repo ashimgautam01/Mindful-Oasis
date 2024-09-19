@@ -9,6 +9,7 @@ import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 import Cookies from "js-cookie";
+import { DeleteIcon } from "lucide-react";
 
 const Page: React.FC = () => {
   interface Post {
@@ -16,37 +17,34 @@ const Page: React.FC = () => {
     image?: string;
     text: string;
     created_at?: Date;
+    user_id?: string; 
   }
+
   interface Comment {
     text: string;
     created_at: Date;
+    user_id?: string;
   }
 
   const user_id = Cookies.get("id");
   const [showAllComments, setShowAllComments] = useState(false);
   const [comments, setComments] = useState<{ [key: number]: Comment[] }>({});
-  const [posts, setPosts] = useState<Post>({
-    image: "",
-    text: "",
-  });
+  const [posts, setPosts] = useState<Post>({ image: "", text: "" });
   const [getPost, setGetPost] = useState<Post[]>([]);
   const [newComment, setNewComment] = useState<string>("");
 
   const handleSubmitPost = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/v2/addpost",
-        {
-          user_id,
-          image: posts.image,
-          text: posts.text,
-        }
-      );
-      if (response.status === 200) {
+      const response = await axios.post("http://localhost:8080/api/v2/addpost", {
+        user_id,
+        image: posts.image,
+        text: posts.text,
+      });
+      if (response.status === 201) {
         console.log("Post added");
         setPosts({ text: "", image: "" });
-        fetchPosts(); // Refresh posts after adding a new one
+        fetchPosts();
       }
     } catch (error) {
       console.log(error);
@@ -65,7 +63,6 @@ const Page: React.FC = () => {
     try {
       const response = await axios.get("http://localhost:8080/api/v2/getallpost");
       if (response.status === 200) {
-        console.log(response.data);
         setGetPost(response.data.results);
         response.data.results.forEach((post: Post) => fetchComments(post.id));
       }
@@ -105,6 +102,31 @@ const Page: React.FC = () => {
     }
   };
 
+  const handleDelete = async (postId: number) => {
+    try {
+      const response = await axios.post(`http://localhost:8080/api/v2/deletepost/${postId}`);
+      if (response.status === 200) {
+        console.log('Post deleted successfully:', response.data);
+        fetchPosts();
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
+  };
+
+  const handleDeleteComment = async (postId: number, commentId: number,user_id: string) => {
+ 
+    try {
+      const response = await axios.post(`http://localhost:8080/api/v3/deletecomment/${commentId}`);
+      if (response.status === 200) {
+        console.log('Comment deleted successfully');
+        fetchComments(postId); 
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
+  };
+
   useEffect(() => {
     fetchPosts();
   }, []);
@@ -133,26 +155,10 @@ const Page: React.FC = () => {
               <p className="text-gray-600 text-sm">See your profile</p>
             </div>
           </div>
-          <img
-            src="https://img.freepik.com/free-vector/watercolor-world-mental-health-day-vertical-flyer-template_23-2149671118.jpg?t=st=1726557240~exp=1726560840~hmac=6fa4663c9648f637889be31f95fa287b0a76f19a4620952ed76431cdf6e56825&w=740"
-            alt="Profile Image"
-            className="mt-4 rounded-lg w-96 h-96 object-cover"
-          />
-          <img
-            src="https://img.freepik.com/free-vector/world-mental-health-day-flat-design-poster-template_23-2149652481.jpg?t=st=1726557369~exp=1726560969~hmac=9982237e788ab4c43b3e3d720db2efb17182f4adc98a651e7580f6c43abc753a&w=740"
-            alt="Profile Image"
-            className="mt-4 rounded-lg w-96 h-96 object-cover"
-          />
-          <img
-            src="https://img.freepik.com/free-vector/self-care-concept_23-2148521744.jpg?t=st=1726557446~exp=1726561046~hmac=a7d56c7166a8ec05e2626887f927edf3ec4dcc021bfbc8d11b21acebc13e2783&w=740"
-            alt="Profile Image"
-            className="mt-4 rounded-lg w-96 h-96 object-cover"
-          />
-          <img
-            src="https://img.freepik.com/free-vector/mental-health-instagram-posts-collection_23-2149054460.jpg?t=st=1726557462~exp=1726561062~hmac=d325b200de22975ba9595914e6bd2530ec31a569118745940106fbe4100f0e3c&w=740"
-            alt="Profile Image"
-            className="mt-4 rounded-lg w-96 h-96 object-cover"
-          />
+          <img src="https://img.freepik.com/free-vector/watercolor-world-mental-health-day-vertical-flyer-template_23-2149671118.jpg" alt="Profile Image" className="mt-4 rounded-lg w-96 h-96 object-cover" />
+          <img src="https://img.freepik.com/free-vector/world-mental-health-day-flat-design-poster-template_23-2149652481.jpg" alt="Profile Image" className="mt-4 rounded-lg w-96 h-96 object-cover" />
+          <img src="https://img.freepik.com/free-vector/self-care-concept_23-2148521744.jpg" alt="Profile Image" className="mt-4 rounded-lg w-96 h-96 object-cover" />
+          <img src="https://img.freepik.com/free-vector/mental-health-instagram-posts-collection_23-2149054460.jpg" alt="Profile Image" className="mt-4 rounded-lg w-96 h-96 object-cover" />
         </div>
         <div>
           {/* Post Submission Form */}
@@ -188,81 +194,70 @@ const Page: React.FC = () => {
           {/* Posts Section */}
           {getPost.map((post) => (
             <div key={post.id} className="bg-white rounded-lg mt-10 p-4 shadow-md hover:shadow-xl transition-shadow duration-300 mb-8">
-              <CardHeader className="flex items-start space-x-4">
-                <Avatar className="w-10 h-10 border-2 border-purple-800 ml-5">
-                  <AvatarImage src="/placeholder-user.jpg" alt="User's Profile" />
-                  <AvatarFallback>AN</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-semibold text-lg text-gray-900">Anonymous</p>
-                  {post.created_at && (
-                    <p className="text-gray-600 text-sm">
-                      {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-                    </p>
-                  )}
-                </div>
-              </CardHeader>
+              <div className="flex justify-between items-center">
+                <CardHeader className="flex items-start space-x-4">
+                  <Avatar className="w-10 h-10 border-2 border-purple-800 ml-5">
+                    <AvatarImage src="/placeholder-user.jpg" alt="User's Profile" />
+                    <AvatarFallback>AN</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-semibold text-lg text-gray-900">Anonymous</p>
+                    {post.created_at && (
+                      <p className="text-gray-600 text-sm">
+                        {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                      </p>
+                    )}
+                  </div>
+                </CardHeader>
+                {post.user_id == user_id && (
+                  <DeleteIcon className="w-8 h-8 cursor-pointer" onClick={() => handleDelete(post.id)} />
+                )}
+              </div>
               <CardContent>
                 <p className="text-gray-800">{post.text}</p>
-                {post.image && (
-                  <img
-                    src={post.image}
-                    alt="Post Image"
-                    width={600}
-                    height={400}
-                    className="mt-4 rounded-lg transition-transform transform hover:scale-105 duration-300"
-                    style={{ aspectRatio: "600/400", objectFit: "cover" }}
-                  />
-                )}
+                {post.image && <img src={post.image} alt="Post Image" className="mt-4 rounded-md" />}
               </CardContent>
               <CardFooter>
                 <div className="flex flex-col space-y-4">
-                  {(comments[post.id] || []).slice(0, showAllComments ? undefined : 2).map((comment, index) => (
-                    <div key={index} className="flex items-start space-x-4 p-2 bg-gray-50 rounded-lg shadow-sm">
-                      <Avatar className="w-10 h-10 border-2 border-pink-600">
-                        <AvatarImage src="/placeholder-user.jpg" alt="Commenter's Profile" />
+                  {/* Comments Section */}
+                  {(comments[post.id] || []).map((comment) => (
+                    <div key={comment.id} className="flex items-start space-x-4 p-2 bg-gray-50 rounded-lg shadow-sm">
+                      <Avatar className="w-8 h-8 border-2 border-purple-800">
+                        <AvatarImage src="/placeholder-user.jpg" alt="User's Profile" />
                         <AvatarFallback>AN</AvatarFallback>
                       </Avatar>
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm">Anonymous</p>
-                        {post.created_at && (
-                    <p className="text-gray-600 text-sm">
-                      {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
-                    </p>
-                  )}
-                        <p className="text-gray-700 text-sm">{comment.text}</p>
-
+                      <div className="flex-1">
+                        <p className="text-gray-800">{comment.text}</p>
+                        {comment.created_at && (
+                          <p className="text-gray-600 text-xs">
+                            {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
+                          </p>
+                        )}
                       </div>
+
+                      {comment.user_id == user_id && (
+     
+                        <Button
+                          className="text-white font-bold hover:text-red-500 ml-10 bg-red-600"
+                          onClick={() => handleDeleteComment(post.id, comment.id,comment.user_id)}
+                        >
+                          Delete
+                        </Button>
+                      )}
                     </div>
                   ))}
-                  {comments[post.id]?.length > 2 && (
-                    <Button
-                      onClick={() => setShowAllComments(!showAllComments)}
-                      className="text-sm bg-orange-700 text-white hover:bg-orange-600 transition-colors duration-300"
-                    >
-                      {showAllComments ? 'See less comments' : 'See more comments'}
-                    </Button>
-                  )}
-                  {/* Comment Input Form */}
-                <div className="mt-4">
-                  <Input
-                    placeholder="Add a comment..."
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  <div className="flex justify-end mt-2">
-                    <Button
-                      onClick={() => handleCommentSubmit(post.id!)}
-                      className="bg-teal-500 text-white hover:bg-teal-600 transition-colors duration-300"
-                    >
+                  <form onSubmit={() => handleCommentSubmit(post.id)} className="flex items-center space-x-4">
+                    <Input
+                      placeholder="Add a comment..."
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button type="submit" className="bg-teal-500 text-white hover:bg-teal-600">
                       Comment
                     </Button>
-                  </div>
+                  </form>
                 </div>
-                </div>
-
-                
               </CardFooter>
             </div>
           ))}

@@ -20,7 +20,7 @@ const Therapists: Therapist[] = [
     {
         name: "John Smith",
         img: "https://img.freepik.com/free-photo/medium-shot-man-working-as-nurse_23-2151061659.jpg?w=360",
-        rate: "Free",
+        rate: "$180/hr",
         stars: 4,
         specialty: "Depression",
         gender: "Male"
@@ -52,7 +52,7 @@ const Therapists: Therapist[] = [
     {
         name: "Jessica Taylor",
         img: "https://img.freepik.com/free-photo/cheerful-young-woman-holding-tablet_23-2148621845.jpg?w=360",
-        rate: "Free",
+        rate: "$110/hr",
         stars: 4,
         specialty: "Relationship Counseling",
         gender: "Female"
@@ -68,7 +68,7 @@ const Therapists: Therapist[] = [
     {
         name: "Laura Adams",
         img: "https://img.freepik.com/free-photo/young-female-therapist-sitting-couch_23-2148252529.jpg?w=360",
-        rate: "Free",
+        rate: "$100/hr",
         stars: 4,
         specialty: "Grief Counseling",
         gender: "Female"
@@ -100,7 +100,7 @@ const Therapists: Therapist[] = [
     {
         name: "Sophia Lee",
         img: "https://img.freepik.com/free-photo/young-female-doctor_23-2148759032.jpg?w=360",
-        rate: "Free",
+        rate: "$100/hr",
         stars: 4,
         specialty: "Play Therapy",
         gender: "Female"
@@ -148,7 +148,7 @@ const Therapists: Therapist[] = [
     {
         name: "Jennifer Aniston",
         img: "https://img.freepik.com/free-photo/portrait-female-therapist_23-2148759034.jpg?w=360",
-        rate: "Free",
+        rate: "$110/hr",
         stars: 4,
         specialty: "Conflict Resolution",
         gender: "Female"
@@ -172,7 +172,7 @@ const Therapists: Therapist[] = [
     {
         name: "Peter Parker",
         img: "https://img.freepik.com/free-photo/smiling-male-therapist_23-2148759037.jpg?w=360",
-        rate: "Free",
+        rate: "$105/hr",
         stars: 5,
         specialty: "Anxiety Management",
         gender: "Male"
@@ -196,7 +196,7 @@ const Therapists: Therapist[] = [
     {
         name: "Diana Prince",
         img: "https://img.freepik.com/free-photo/female-doctor-sitting-office_23-2148759040.jpg?w=360",
-        rate: "Free",
+        rate: "$100/hr",
         stars: 4,
         specialty: "PTSD Counseling",
         gender: "Female"
@@ -228,7 +228,7 @@ const Therapists: Therapist[] = [
     {
         name: "Peter Parker",
         img: "https://img.freepik.com/free-photo/female-therapist-in-office_23-2148759044.jpg?w=360",
-        rate: "Free",
+        rate: "$115/hr",
         stars: 4,
         specialty: "Social Skills Training",
         gender: "Female"

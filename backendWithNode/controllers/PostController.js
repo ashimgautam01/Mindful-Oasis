@@ -28,11 +28,11 @@ const AddPost = async (req, res) => {
 }
 
 const DeletePost=async(req,res)=>{
-    const {post_id}=req.body
-    if(!post_id){
+    const {id}=req.params
+    if(!id){
         return res.status(400).json("post is not present")
     }
-    const [result]=await pool.query('DELETE FROM post WHERE id=?',[post_id],(error)=>{
+    const [result]=await pool.query('DELETE FROM post WHERE id=?',[id],(error)=>{
         if(error){
             console.log(error);
             return;

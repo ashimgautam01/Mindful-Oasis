@@ -23,7 +23,7 @@ const Page = () => {
       <Navbar/>
       <section className="w-full -mt-10 md:py-24 lg:py-32 bg-gradient-to-b from-gray-50 to-gray-100">
         <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-4xl font-bold text-center mb-10 text-gray-800 animate__animated animate__zoomInDown animate__slow ">Meet Our Therapists</h2>
+          <h2 className="text-5xl font-bold text-center mb-10 text-gray-800 animate__animated animate__zoomInDown animate__slow ">Meet Our Therapists</h2>
      
           
           {/* Search Bar with Icon */}

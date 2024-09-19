@@ -35,7 +35,8 @@ const getAllComment=async(req,res)=>{
 }
 
 const deleteComment=async(req,res)=>{
-    const id=req.body
+    const {id}=req.params
+    console.log(id);
     try {
         const results=await pool.query(`DELETE FROM comment WHERE id=?`,[id])
         if(results){

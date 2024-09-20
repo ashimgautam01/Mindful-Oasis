@@ -2,6 +2,7 @@ import SendVerificationEmail from "../Emails/sendVerificatioMail.js";
 import pool from "../index.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
 const RegisterUser = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -13,12 +14,11 @@ const RegisterUser = async (req, res) => {
     );
 
     if (CheckingEmail.length > 0) {
-      return res.status(402).json("Email already exists");
+      return res.status(402).json({ message: "Email already exists" });
     }
 
     // Generate OTP and calculate expiry
     const otp = Math.floor(Math.random() * 999999).toString();
-    const now = new Date();
     const expiry = new Date(Date.now() + 20 * 60 * 1000); // 20 minutes from now
 
     // Hash the password
@@ -39,7 +39,6 @@ const RegisterUser = async (req, res) => {
 
     // Send the verification email
     const emailResult = await SendVerificationEmail(email, html);
-
     if (!emailResult) {
       return res.status(500).json("Failed to send verification email");
     }
@@ -49,21 +48,20 @@ const RegisterUser = async (req, res) => {
     const query = `INSERT INTO users(name, email, password, otp, expiry) VALUES (?, ?, ?, ?, ?)`;
     const values = [name, email, hashpassword, otp, expiry];
 
-    pool.query(query, values, (error, results) => {
-      if (error) {
-        console.log(error);
-        return res.status(400).json("Database error");
-      }
+    // Await the query and check for errors
+    
+      const [results]=await pool.query(query, values);
+      console.log(results);
 
-      console.log("Query successful:", results);
-      return res.status(200).json({ message: "User registered successfully" });
-    });
+    // Send a successful response
+    return res.status(200).json({ message: "User registered successfully" });
 
   } catch (error) {
     console.error("Error in RegisterUser:", error);
     return res.status(500).json("An unexpected error occurred");
   }
 };
+
 
 const OTPVerification = async (req, res) => {
   const { email, otp } = req.body;
@@ -99,48 +97,49 @@ const OTPVerification = async (req, res) => {
   }
 };
 
-
 const LoginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const [result] = await pool.query(`SELECT * FROM users WHERE email=?`, [
-      email,
-    ]);
-    if (result.length == 0) {
-      return res.status(400).json("Email not found");
-    }
-    const user = result[0];
-    if (user.is_verified == 0) {
-      return res.json("Please verify your email");
-    }
-    const checkingpass = bcrypt.compare(password.toString(), user.password);
-    if (!checkingpass) {
-      return res.status(400).json("Check your password");
-    }
-   const refresh_token = jwt.sign(
-      { email },
-      process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "15m" }
-    );
-    const access_token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "7d",
-    });
-    
-   
-      res.cookie("refresh", refresh_token,{ httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Strict',
-        path: '/'});
-      res.cookie("access", access_token,{
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Strict',
-        path: '/'
+      const [result] = await pool.query(`SELECT * FROM users WHERE email=?`, [email]);
+      
+      if (result.length === 0) {
+          return res.status(400).json({ "message": "Email not found, please register first" });
+      }
+      
+      const user = result[0];
+      
+      if (user.is_verified === 0) {
+          return res.status(400).json({ "message": "Please verify your email" });
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      
+      if (!isPasswordValid) {
+          return res.status(400).json({ "message": "Check your password" });
+      }
+
+      const refresh_token = jwt.sign({ email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "15m" });
+      const access_token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "7d" });
+
+      res.cookie("refresh", refresh_token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'Strict',
+          path: '/'
       });
-      res.status(200).json({'access_token':access_token,"id":user.id,message:"Login Successful"});
-    
+
+      res.cookie("access", access_token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'Strict',
+          path: '/'
+      });
+
+      res.status(200).json({ 'access_token': access_token, "id": user.id, message: "Login Successful" });
+
   } catch (error) {
-    console.log(error);
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

@@ -10,6 +10,7 @@ import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 import Cookies from "js-cookie";
 import { DeleteIcon } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const Page: React.FC = () => {
   interface Post {
@@ -42,7 +43,11 @@ const Page: React.FC = () => {
         text: posts.text,
       });
       if (response.status === 201) {
-        console.log("Post added");
+        toast({
+          title: "Success",
+          description: response.data.message,
+          variant: "success",
+      });
         setPosts({ text: "", image: "" });
         fetchPosts();
       }
@@ -93,7 +98,11 @@ const Page: React.FC = () => {
         text: newComment,
       });
       if (response.status === 200) {
-        console.log("Comment added");
+        toast({
+          title: "Success",
+          description: response.data.message,
+          variant: "success",
+      });
         setNewComment(""); 
         fetchComments(postId); 
       }
@@ -106,7 +115,11 @@ const Page: React.FC = () => {
     try {
       const response = await axios.post(`http://localhost:8080/api/v2/deletepost/${postId}`);
       if (response.status === 200) {
-        console.log('Post deleted successfully:', response.data);
+        toast({
+          title: "Deleted",
+          description: response.data.message,
+          variant: "destructive",
+      });
         fetchPosts();
       }
     } catch (error) {
@@ -119,7 +132,11 @@ const Page: React.FC = () => {
     try {
       const response = await axios.post(`http://localhost:8080/api/v3/deletecomment/${commentId}`);
       if (response.status === 200) {
-        console.log('Comment deleted successfully');
+        toast({
+          title: "Deleted",
+          description: response.data.message,
+          variant: "destructive",
+      });
         fetchComments(postId); 
       }
     } catch (error) {

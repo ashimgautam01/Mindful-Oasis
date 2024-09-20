@@ -2,14 +2,17 @@
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar/Navbar";
 import Image from "next/image";
-import { Leaf } from "lucide-react";
+import { Leaf, Loader2 } from "lucide-react";
 import "animate.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Toast } from "@/components/ui/toast";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 const Page = () => {
   const router =useRouter();
-  
+  const [loading,SetLoading]=useState(false)
   interface User {
     name: string;
     email: string;
@@ -24,18 +27,47 @@ const Page = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    SetLoading(true);
     try {
-      router.push(`/verify/${data.email}`)
       const response = await axios.post("http://localhost:8080/api/v1/registeruser", data);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.message);
-        console.error("Error details:", error.toJSON());
-      } else {
-        console.error("Unexpected error:", error);
-      }
+      
+
+        if (response.status === 402) {
+            // Handle existing email error
+            toast({
+                title: "Failed",
+                description: response.data.message,
+                variant: "destructive",
+            });
+        }else{
+          toast({
+            title: "successs",
+            description: response.data.message,
+            variant: "success",
+        });
+          router.push(`/verify/${data.email}`);
+        }
+    } catch (error:any) {
+        // Handle any unexpected errors
+        if (error.response && error.response.data) {
+            toast({
+                title: "Error",
+                description: error.response.data.message || "An unexpected error occurred",
+                variant: "destructive",
+            });
+        } else {
+            toast({
+                title: "Error",
+                description: "An unexpected error occurred",
+                variant: "destructive",
+            });
+        }
+        console.log(error);
+    } finally {
+        SetLoading(false);
     }
-  };
+};
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -119,12 +151,20 @@ const Page = () => {
                 />
               </div>
 
-              <button
+             {! loading?
+             <Button
                 type="submit"
                 className="w-full py-2 px-4 bg-teal-600 text-white font-semibold rounded-md shadow-sm hover:bg-teal-700 transition-colors duration-200 ease-in-out animate__animated animate__rotateInDownRight animate__slow"
               >
                 Sign Up
-              </button>
+              </Button>:
+              <Button
+              type="button"
+              className="w-full py-2 px-4 bg-teal-600 text-white font-semibold rounded-md shadow-sm hover:bg-teal-700 transition-colors duration-200 ease-in-out animate__animated animate__rotateInDownRight animate__slow"
+            >
+             <Loader2 className="animate-spin h-5 w-5 mr-3"/> Submitting......
+            </Button>
+              }
             </form>
             <p className="text-center text-gray-600">
               Already have an account?{" "}

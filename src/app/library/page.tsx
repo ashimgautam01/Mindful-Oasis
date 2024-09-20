@@ -147,14 +147,14 @@ const Page = () => {
         {showMore ? (
           <button
             onClick={handleShowMore}
-            className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-300"
+            className="px-6 py-3 bg-green-600 mb-10 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-300"
           >
             Show More
           </button>
         ) : (
           <button
             onClick={handleShowLess}
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+            className="px-6 py-3 m-10 bg-blue-600 text-white mb-10 font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
           >
             Show Less
           </button>

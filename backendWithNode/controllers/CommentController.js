@@ -41,7 +41,7 @@ const deleteComment=async(req,res)=>{
         const results=await pool.query(`DELETE FROM comment WHERE id=?`,[id])
         if(results){
             
-            return res.status(200).json("Comment deleted")
+            return res.status(200).json({"message":"Comment deleted successfully"})
         }
     } catch (error) {
         console.log(error);

@@ -7,6 +7,7 @@ import Cookie from "js-cookie";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Loader } from "../Loader";
+import { toast } from "@/hooks/use-toast";
 
 export default function Component() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); 
@@ -26,7 +27,7 @@ export default function Component() {
     
     }
   };
-
+ 
   if (isLoggedIn === null) {
     return <div><Loader/></div>; 
   }
@@ -85,6 +86,7 @@ export default function Component() {
           href="/webinar"
           className="inline-flex h-9 items-center justify-center rounded-md bg-transparent px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors focus:outline-none focus:ring-2 -offset-2"
           prefetch={false}
+           
         >
           Webinars
         </Link>

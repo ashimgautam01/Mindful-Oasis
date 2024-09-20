@@ -39,7 +39,7 @@ const DeletePost=async(req,res)=>{
         }
     })
     
-    return res.status(200).json("post deleted")
+    return res.status(200).json({"message":"post deleted successfully"})
 }
 
 

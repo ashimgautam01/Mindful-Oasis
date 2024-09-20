@@ -8,6 +8,7 @@ import 'animate.css';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Cookie from 'js-cookie'
+import { toast } from '@/hooks/use-toast';
 interface User {
   email: string;
   password: string;
@@ -23,20 +24,34 @@ const Page: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); 
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/loginuser", data,
-        { withCredentials: true } 
-      );
-      console.log(response.data);
-          Cookie.set('id',response.data.id)
-          Cookie.set('accesst', response.data.access_token);
-     
-      // router.replace('/');
-      
+        const response = await axios.post("http://localhost:8080/api/v1/loginuser", data, { withCredentials: true });
+
+        if (response.status === 200) {
+            console.log(response.data);
+            Cookie.set('id', response.data.id);
+            Cookie.set('accesst', response.data.access_token);
+            router.push('/');
+            toast({
+                title: "Success",
+                description: response.data.message,
+                variant: "success",
+            });
+        } else {
+            toast({
+                title: "Failed",
+                description: response.data.message,
+                variant: "destructive",
+            });
+        }
     } catch (error) {
-      console.error("Login error:", error);
-     
+        console.error("Login error:", error);
+        toast({
+            title: "Error",
+            description: "An error occurred during login. Please try again.",
+            variant: "destructive",
+        });
     }
-  };
+};
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

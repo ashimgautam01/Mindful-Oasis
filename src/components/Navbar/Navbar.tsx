@@ -7,15 +7,11 @@ import Cookie from "js-cookie";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Loader } from "../Loader";
-import { toast } from "@/hooks/use-toast";
 
 export default function Component() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); 
 
-  useEffect(() => {
-    const token = Cookie.get('accesst');
-    setIsLoggedIn(!!token); 
-  }, []);
+
 
   const handleLogout = async () => {
     try {
@@ -31,7 +27,11 @@ export default function Component() {
   if (isLoggedIn === null) {
     return <div><Loader/></div>; 
   }
-
+  useEffect(() => {
+    const token = Cookie.get('accesst');
+    setIsLoggedIn(!!token); 
+    
+  }, []);
   return (
     <header className="sticky top-0 z-50 w-full bg-black/100 backdrop-blur transition-all duration-300">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">

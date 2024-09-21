@@ -1,11 +1,12 @@
 "use client";
 import { StarIcon, SearchIcon, PersonStanding, DollarSign } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Therapists, { Therapist } from '@/components/helpers/Therapists'
 import 'animate.css'
 import Navbar from '@/components/Navbar/Navbar'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import axios from 'axios';
 const Page = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGender, setSelectedGender] = useState('All');
@@ -19,7 +20,20 @@ const Page = () => {
 
     return matchesSearch && matchesGender && matchesPrice;
   });
+  
+  const verifyUser = async () => {
+    try {
+        const response = await axios.get("http://localhost:8080/api/v1/get", { withCredentials: true });
+        console.log(response.data);
+    } catch (error) {
+        console.error(error);
+    }
+};
 
+  useEffect(()=>{
+    verifyUser();
+    
+  },[])
   return (
     <div>
       <Navbar/>

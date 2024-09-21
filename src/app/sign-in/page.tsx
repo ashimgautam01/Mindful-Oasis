@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar/Navbar';
 import Image from 'next/image';
 import { Leaf } from 'lucide-react';
@@ -60,6 +60,14 @@ const Page: React.FC = () => {
       [name]: value
     });
   };
+
+  const verifyUser=async()=>{
+    const response=await axios.get("http://localhost:8080/api/v1/get");
+    console.log(response);
+  }
+  useEffect(()=>{
+    verifyUser()
+  },[])
 
   return (
     <div>

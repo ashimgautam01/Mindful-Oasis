@@ -156,7 +156,7 @@ const LogoutUser=async (req,res)=>{
 
 const verifyUser=async(req,res)=>{
   const users=req.user
-  console.log("done");
+  console.log("usesr:",users);
   return res.status(200).json({'user':users})
 }
 

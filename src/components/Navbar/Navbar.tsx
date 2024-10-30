@@ -6,11 +6,9 @@ import { LeafIcon, MenuIcon } from "lucide-react";
 import Cookie from "js-cookie";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Loader } from "../Loader";
 
 export default function Component() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); 
-
 
 
   const handleLogout = async () => {
@@ -24,9 +22,7 @@ export default function Component() {
     }
   };
  
-  if (isLoggedIn === null) {
-    return <div><Loader/></div>; 
-  }
+
   useEffect(() => {
     const token = Cookie.get('accesst');
     setIsLoggedIn(!!token); 

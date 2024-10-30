@@ -2,12 +2,12 @@
 import {
   ArrowRightCircleIcon,
   FrownIcon,
-  LeafIcon,
   MedalIcon,
   MoonIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { Typing } from "./Typing";
+import Image from "next/image";
 import { FAQ } from "./FAQ";
 import { UserExp } from "./Userexp";
 
@@ -22,8 +22,8 @@ const Hero = () => {
               <div className="flex flex-col justify-center space-y-6 lg:space-y-8">
                 <Typing />
               </div>
-              <img
-                src="https://img.freepik.com/free-photo/portrait-person-suffering-from-hangover_23-2151256258.jpg?t=st=1726417851~exp=1726421451~hmac=433d44ad5a07d4fca29b09b9965aa1a5a52d3d37ce9f696b4fad4db2689ac9e9&w=1060"
+              <Image
+                src="https://Image.freepik.com/free-photo/portrait-person-suffering-from-hangover_23-2151256258.jpg?t=st=1726417851~exp=1726421451~hmac=433d44ad5a07d4fca29b09b9965aa1a5a52d3d37ce9f696b4fad4db2689ac9e9&w=1060"
                 alt="Hero"
                 className="mx-auto h-64 w-full object-cover overflow-hidden rounded-lg sm:h-80 lg:h-[450px] lg:order-last lg:aspect-square"
                 width="550"
@@ -134,8 +134,8 @@ const Hero = () => {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-              <img
-                src="https://img.freepik.com/free-photo/heart-healthy-life-wellness-icon_53876-123819.jpg?t=st=1726420761~exp=1726424361~hmac=23f6f24ab5de58e397b285aeb3139d67dab3e2bfe494b491794644d71b92f128&w=826"
+              <Image
+                src="https://Image.freepik.com/free-photo/heart-healthy-life-wellness-icon_53876-123819.jpg?t=st=1726420761~exp=1726424361~hmac=23f6f24ab5de58e397b285aeb3139d67dab3e2bfe494b491794644d71b92f128&w=826"
                 alt="Features"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
                 width="550"

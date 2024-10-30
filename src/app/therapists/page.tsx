@@ -1,17 +1,17 @@
 "use client";
 import { StarIcon, SearchIcon, PersonStanding, DollarSign } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import Therapists, { Therapist } from '@/components/helpers/Therapists'
+import Therapists from '@/components/helpers/Therapists'
 import 'animate.css'
 import Navbar from '@/components/Navbar/Navbar'
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
+import Image from 'next/image';
+
 const Page = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGender, setSelectedGender] = useState('All');
   const [selectedPrice, setSelectedPrice] = useState('All');
-  const router=useRouter()
 
   const filteredTherapists = Therapists.filter(therapist => {
     const matchesSearch = therapist.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -92,7 +92,7 @@ const Page = () => {
                 key={index}
                 className="flex flex-col items-center justify-center space-y-4 rounded-lg bg-white p-6 shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl"
               >
-                <img
+                <Image
                   src={therapist.img}
                   alt={therapist.name}
                   width={100}

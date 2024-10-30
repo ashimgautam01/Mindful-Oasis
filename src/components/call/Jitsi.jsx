@@ -22,7 +22,7 @@ const JitsiCall = ({ roomName, displayName }) => {
                 userInfo={{
                     displayName: displayName,
                 }}
-                onApiReady={(externalApi) => {
+                onApiReady={() => {
                    
                 }}
                 getIFrameRef={(iframeRef) => {

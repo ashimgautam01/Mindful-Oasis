@@ -6,7 +6,6 @@ import { Leaf, Loader2 } from "lucide-react";
 import "animate.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
@@ -47,12 +46,12 @@ const Page = () => {
         });
           router.push(`/verify/${data.email}`);
         }
-    } catch (error:any) {
-        // Handle any unexpected errors
-        if (error.response && error.response.data) {
+    } catch (error: unknown) {
+
+        if (axios.isAxiosError(error)) {
             toast({
                 title: "Error",
-                description: error.response.data.message || "An unexpected error occurred",
+                description:  "An unexpected error occurred",
                 variant: "destructive",
             });
         } else {

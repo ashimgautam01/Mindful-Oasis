@@ -2,14 +2,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Navbar from '@/components/Navbar/Navbar'
+import Navbar from '@/components/Navbar/Navbar';
 
-const page = () => {
+const Page = () => {
   return (
     <>
       <Navbar />
       <div className="min-h-screen bg-gray-50">
-
         <section className="relative bg-gradient-to-r bg-transparent text-white">
           <div className="absolute inset-0 flex items-center justify-center">
             <Image
@@ -35,7 +34,7 @@ const page = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              Discover a sanctuary where mental well-being takes center stage. At Mindful Oasis, we offer resources, support, and guidance to help you navigate life's challenges with mindfulness and grace.
+              Discover a sanctuary where mental well-being takes center stage. At Mindful Oasis, we offer resources, support, and guidance to help you navigate life&apos;s challenges with mindfulness and grace.
             </motion.p>
           </div>
         </section>
@@ -100,7 +99,7 @@ const page = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              Have questions or need support? Reach out to us through our contact form, and we'll get back to you as soon as possible.
+              Have questions or need support? Reach out to us through our contact form, and we&apos;ll get back to you as soon as possible.
             </motion.p>
             <a
               href="/contact"
@@ -115,4 +114,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

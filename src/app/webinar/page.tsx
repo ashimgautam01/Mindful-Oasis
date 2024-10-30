@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Navbar from '@/components/Navbar/Navbar'
 const webinars = [
   {
@@ -43,7 +44,7 @@ const Page = () => {
     <>
     <Navbar/>
     <div className="relative mb-0">
-        <img 
+        <Image
           src="https://img.freepik.com/free-vector/hand-drawn-business-workshop-youtube-channel-art_23-2149416515.jpg?t=st=1726762458~exp=1726766058~hmac=9601a79a884a90d17a800c15bd4e7b9cdc331c5b56a81a7e30aa3afced7e59d0&w=1380" 
           alt="Mental Health"
           className="w-screen h-64 object-cover rounded-lg shadow-md opacity-75" 
@@ -64,7 +65,7 @@ const Page = () => {
       <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {webinars.map((webinar, index) => (
           <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl duration-300">
-            <img 
+            <Image
               src={webinar.image} 
               alt={webinar.title} 
               className="rounded-lg h-48 w-full object-cover transition-transform duration-500 transform hover:scale-110" 

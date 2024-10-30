@@ -27,6 +27,7 @@ const nextConfig = {
           'images.abcnews.go.com',
           'www.forbes.com',
           'www.techradar.com',
+          'www.cnet.com',
         ],
         
       },

@@ -16,6 +16,8 @@ const nextConfig = {
           'img.reuters.com',
           'assets.bwbx.io',
           'i.insider.com',
+          'image.freepik.com',
+          "res.cloudinary.com",
           'www.ft.com',
           'api.time.com',
           'images.macrumors.com',

@@ -16,15 +16,13 @@ const RegisterUser = async (req, res) => {
     if (CheckingEmail.length > 0) {
       return res.status(402).json({ message: "Email already exists" });
     }
-
-    // Generate OTP and calculate expiry
+ 
     const otp = Math.floor(Math.random() * 999999).toString();
-    const expiry = new Date(Date.now() + 20 * 60 * 1000); // 20 minutes from now
+    const expiry = new Date(Date.now() + 20 * 60 * 1000);  
 
     // Hash the password
     const hashpassword = await bcrypt.hash(password, 10);
-
-    // Prepare the email content
+ 
     const html = `<h1>OTP Verification</h1>
         Dear <p class='text-red-600 font-bold'> ${name},</p>
         <p>Thank you for registering with us. To complete your registration, please use the following OTP code:</p>
@@ -36,8 +34,7 @@ const RegisterUser = async (req, res) => {
         <p>If you have any questions or need further assistance, feel free to</p>
         <div class="footer">
             <p>Best regards,<br class='text-green-600'>Ashim</p>`;
-
-    // Send the verification email
+ 
     const emailResult = await SendVerificationEmail(email, html);
     if (!emailResult) {
       return res.status(500).json("Failed to send verification email");

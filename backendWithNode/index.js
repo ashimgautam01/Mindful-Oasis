@@ -26,6 +26,7 @@ const PORT = process.env.PORT_NUM;
 app.use('/api', userRouter);
 app.use('/api',postRoute);
 app.use('/api',CommentRoute)
+console.log(process.env.DATABASE_PASS);
 
 const pool = mysql.createPool({
    host: process.env.DATABASE_HOST,

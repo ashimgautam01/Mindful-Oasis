@@ -4,7 +4,7 @@ import pool from "../index.js"
 const AddComment=async(req,res)=>{
     const {user_id,post_id,text}=req.body
     try {
-        const query=(`INSERT INTO comment(user_id,post_id,text) values(?,?,?)`)
+        const query=(`INSERT INTO comments(user_id,post_id,text) values(?,?,?)`)
         const values=[
             user_id,
             post_id,
@@ -27,7 +27,7 @@ const getAllComment=async(req,res)=>{
     const {id}=req.params
    
     try {
-        const [results]=await pool.query(`SELECT * FROM comment WHERE post_id=? ORDER BY created_at DESC `,[id])
+        const [results]=await pool.query(`SELECT * FROM comments WHERE post_id=? ORDER BY created_at DESC `,[id])
         return res.status(200).json({"message":"comments loaded","comments":results})
     } catch (error) {
         console.log(error);
@@ -38,7 +38,7 @@ const deleteComment=async(req,res)=>{
     const {id}=req.params
     console.log(id);
     try {
-        const results=await pool.query(`DELETE FROM comment WHERE id=?`,[id])
+        const results=await pool.query(`DELETE FROM comments WHERE id=?`,[id])
         if(results){
             
             return res.status(200).json({"message":"Comment deleted successfully"})

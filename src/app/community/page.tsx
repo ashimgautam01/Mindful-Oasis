@@ -14,7 +14,7 @@ import Image from "next/image";
 const Page: React.FC = () => {
   interface Post {
     id?: number;
-    image?: string;
+    image?: File| null;
     text: string;
     created_at?: Date;
     user_id?: string;
@@ -29,31 +29,50 @@ const Page: React.FC = () => {
 
   const user_id = Cookies.get("id");
   const [comments, setComments] = useState<{ [key: number]: Comment[] }>({});
-  const [posts, setPosts] = useState<Post>({ image: "", text: "" });
+  const [posts, setPosts] = useState<Post>({ image: null as File | null, text: "" });
   const [getPost, setGetPost] = useState<Post[]>([]);
   const [newComment, setNewComment] = useState<string>("");
-
-  const handleSubmitPost = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:8080/api/v2/addpost", {
-        user_id,
-        image: posts.image,
-        text: posts.text,
+const handleSubmitPost = async (e: React.FormEvent) => {
+  e.preventDefault(); 
+  if(!user_id){
+     toast({
+        title: "Failed",
+        description: "Please login first",
+        variant: "destructive",
       });
-      if (response.status === 201) {
-        toast({
-          title: "Success",
-          description: response.data.message,
-          variant: "success",
-        });
-        setPosts({ text: "", image: "" });
-        fetchPosts();
+  }
+  const formData = new FormData();
+  formData.append("user_id", user_id ?? "");
+  formData.append("text", posts.text);
+  if (posts.image) {
+    formData.append("image", posts.image); 
+  } 
+  
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/v2/addpost",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }
-    } catch (error) {
-      console.log(error);
+    );
+
+    if (response.status === 201) {
+      toast({
+        title: "Success",
+        description: response.data.message,
+        variant: "success",
+      });
+      setPosts({ text: "", image: null });
+      fetchPosts();
     }
-  };
+  } catch (error) {
+    console.log("Upload failed:", error);
+  }
+};
+
 
   const handleChangepostText = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -62,6 +81,15 @@ const Page: React.FC = () => {
       [name]: value,
     }));
   };
+  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files && e.target.files[0]) {
+    setPosts((prev) => ({
+      ...prev,
+      image: e.target.files![0],
+    }));
+  }
+};
+
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -196,7 +224,7 @@ const Page: React.FC = () => {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleChangepostText(e as React.ChangeEvent<HTMLInputElement>)}
+                onChange={(e) => handleChangeImage(e as React.ChangeEvent<HTMLInputElement>)}
                 className="w-full border border-gray-300 p-2 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
               />
               <div className="flex justify-end">
